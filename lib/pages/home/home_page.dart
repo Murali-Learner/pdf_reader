@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:pdfrx/pdfrx.dart';
 import 'package:pocket_pdf/pages/home/widgets/pdf_control_buttons.dart';
+import 'package:pocket_pdf/pdfrx/pdfrx_lib/src/widgets/pdf_viewer.dart';
+import 'package:pocket_pdf/pdfrx/pdfrx_lib/src/widgets/pdf_viewer_params.dart';
 import 'package:pocket_pdf/providers/pdf_provider.dart';
 import 'package:pocket_pdf/utils/constants.dart';
 import 'package:pocket_pdf/widgets/global_loading_widget.dart';
@@ -92,12 +93,12 @@ class _HomePageState extends State<HomePage> {
                             //
                             margin: 20,
                             onTextSelectionChange: (selection) {
-                              if (selection != null) {
-                                final text = selection.first.text;
-                                final List<String> words = text.split(" ");
+                              // if (selection != null) {
+                              //   final text = selection.first.text;
+                              //   final List<String> words = text.split(" ");
 
-                                debugPrint("selection ${words.length}");
-                              }
+                              //   debugPrint("selection ${words.length}");
+                              // }
                             },
                             onViewerReady: (document, controller) {
                               provider.handlePDF();

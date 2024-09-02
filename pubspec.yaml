@@ -43,9 +43,8 @@ dependencies:
   shimmer: ^3.0.0
   receive_sharing_intent: ^1.8.0
   file_picker: ^8.1.2
-  pdfrx:
-    path: C:\Users\SaiLaptop\Desktop\projects\flutter_projects\internetArchive\book_app\packages\pdfrx
-  
+  url_launcher: ^6.3.0
+
   # flutter_sharing_intent: ^1.1.1
   # android_intent_plus: ^5.1.0
 

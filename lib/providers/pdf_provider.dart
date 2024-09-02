@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pdfrx/pdfrx.dart';
 import 'package:pocket_pdf/models/pdf_model.dart';
+import 'package:pocket_pdf/pdfrx/pdfrx_lib/pdfrx.dart';
 import 'package:pocket_pdf/utils/constants.dart';
 import 'package:pocket_pdf/utils/toast_utils.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';

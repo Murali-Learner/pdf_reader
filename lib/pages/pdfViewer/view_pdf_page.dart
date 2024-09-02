@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:pdfrx/pdfrx.dart';
 import 'package:pocket_pdf/providers/pdf_provider.dart';
 import 'package:pocket_pdf/widgets/global_loading_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../pdfrx/pdfrx_lib/pdfrx.dart';
 
 class ViewPdfPage extends StatelessWidget {
   const ViewPdfPage({

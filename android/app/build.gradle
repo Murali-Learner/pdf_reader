@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.pocket_pdf"
+    namespace = "com.example.pdf_reader"
     compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
