@@ -1,4 +1,4 @@
-package com.example.pocket_pdf;
+package com.example.pdf_reader;
 
 import io.flutter.embedding.android.FlutterActivity;
 

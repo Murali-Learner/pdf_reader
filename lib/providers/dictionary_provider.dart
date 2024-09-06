@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pocket_pdf/helpers/db_helper.dart';
-import 'package:pocket_pdf/models/word_model.dart';
+import 'package:pdf_reader/helpers/db_helper.dart';
+import 'package:pdf_reader/models/word_model.dart';
 
 class DictionaryProvider with ChangeNotifier {
   final Map<int, Word> _results = {};

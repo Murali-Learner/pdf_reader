@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pocket_pdf/pages/home/home_page.dart';
-import 'package:pocket_pdf/providers/dictionary_provider.dart';
-import 'package:pocket_pdf/providers/pdf_provider.dart';
+import 'package:media_store_plus/media_store_plus.dart';
+import 'package:pdf_reader/pages/home/home_page.dart';
+import 'package:pdf_reader/providers/dictionary_provider.dart';
+import 'package:pdf_reader/providers/pdf_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MediaStore.ensureInitialized();
+  MediaStore.appFolder = "PdfReader";
+
   runApp(const MyApp());
 }
 

@@ -1,7 +1,7 @@
-import 'package:pocket_pdf/pages/dictionary/widgets/no_results_found.dart';
-import 'package:pocket_pdf/pages/dictionary/widgets/word_tile_widget.dart';
-import 'package:pocket_pdf/providers/dictionary_provider.dart';
-import 'package:pocket_pdf/widgets/shimmer_loading.dart';
+import 'package:pdf_reader/pages/dictionary/widgets/no_results_found.dart';
+import 'package:pdf_reader/pages/dictionary/widgets/word_tile_widget.dart';
+import 'package:pdf_reader/providers/dictionary_provider.dart';
+import 'package:pdf_reader/widgets/shimmer_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

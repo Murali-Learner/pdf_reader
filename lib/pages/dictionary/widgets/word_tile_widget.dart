@@ -1,6 +1,6 @@
-import 'package:pocket_pdf/models/word_model.dart';
-import 'package:pocket_pdf/pages/dictionary/widgets/word_bottom_sheet.dart';
-import 'package:pocket_pdf/utils/extensions/context_extension.dart';
+import 'package:pdf_reader/models/word_model.dart';
+import 'package:pdf_reader/pages/dictionary/widgets/word_bottom_sheet.dart';
+import 'package:pdf_reader/utils/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 
 class WordTile extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pocket_pdf/models/word_model.dart';
+import 'package:pdf_reader/models/word_model.dart';
 
 class WordBottomSheet extends StatelessWidget {
   final Word word;

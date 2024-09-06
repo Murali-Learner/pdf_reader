@@ -1,4 +1,4 @@
-# pocket_pdf
+# pdf_reader
 
 A new Flutter project.
 

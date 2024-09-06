@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:pocket_pdf/pages/dictionary/widgets/search_list_builder.dart';
-import 'package:pocket_pdf/providers/dictionary_provider.dart';
-import 'package:pocket_pdf/utils/extensions/context_extension.dart';
+import 'package:pdf_reader/pages/dictionary/widgets/search_list_builder.dart';
+import 'package:pdf_reader/providers/dictionary_provider.dart';
+import 'package:pdf_reader/utils/extensions/context_extension.dart';
 import 'package:provider/provider.dart';
 
 class DictionaryPage extends StatefulWidget {
@@ -18,8 +18,9 @@ class DictionaryPageState extends State<DictionaryPage> {
   @override
   void initState() {
     super.initState();
+    final provider = context.read<DictionaryProvider>();
     Future.delayed(Duration.zero).whenComplete(() {
-      context.read<DictionaryProvider>().fetchAllWords();
+      provider.fetchAllWords();
     });
   }
 

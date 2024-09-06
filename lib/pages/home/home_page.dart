@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:pdfrx/pdfrx.dart';
-import 'package:pocket_pdf/pages/home/widgets/pdf_control_buttons.dart';
-import 'package:pocket_pdf/providers/pdf_provider.dart';
-import 'package:pocket_pdf/utils/constants.dart';
-import 'package:pocket_pdf/widgets/global_loading_widget.dart';
+import 'package:pdf_reader/pages/download/download_page.dart';
+import 'package:pdf_reader/pages/home/widgets/opened_pdf_list.dart';
+import 'package:pdf_reader/providers/pdf_provider.dart';
+import 'package:pdf_reader/utils/extensions/context_extension.dart';
+import 'package:pdf_reader/widgets/shimmer_loading.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final PdfProvider provider;
   @override
   void initState() {
     super.initState();
@@ -23,164 +22,74 @@ class _HomePageState extends State<HomePage> {
   }
 
   void init() async {
-    final provider = context.read<PdfProvider>();
-    await provider.init();
-    Future.delayed(Duration.zero).whenComplete(() async {
+    provider = context.read<PdfProvider>();
+    await Future.delayed(Duration.zero).whenComplete(() async {
       await provider.handleIntent();
+      provider.internetSubscription();
+      await provider.askPermissions();
     });
   }
 
   @override
   void dispose() {
-    context.read<PdfProvider>().disposeIntentListener();
     super.dispose();
+    provider.internetDispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Constants.scaffoldKey,
       appBar: AppBar(
         title: const Text('Pocket PDF'),
         actions: [
-          Consumer<PdfProvider>(builder: (context, provider, _) {
-            return provider.currentPDF != null
-                ? IconButton(
-                    onPressed: () async {
-                      await provider.pickFile();
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                    ),
-                  )
-                : const SizedBox.shrink();
-          }),
+          Consumer<PdfProvider>(
+            builder: (context, provider, _) {
+              return provider.totalPdfs.isEmpty
+                  ? const SizedBox.shrink()
+                  : IconButton(
+                      tooltip: "Pick a PDF",
+                      onPressed: () async {
+                        await provider.pickFile();
+                      },
+                      icon: const Icon(Icons.add),
+                    );
+            },
+          ),
+          IconButton(
+            tooltip: "Downloads",
+            onPressed: () {
+              context.push(navigateTo: const DownloadPage());
+              provider.resetValues();
+            },
+            icon: const Icon(Icons.download_rounded),
+          )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Consumer<PdfProvider>(
-              builder: (context, provider, _) {
-                if (provider.isLoading || provider.pdfController == null) {
-                  return const GlobalLoadingWidget();
-                }
-
-                if (provider.currentPDF == null) {
-                  return ElevatedButton(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer(builder: (context, provider, _) {
+          return Consumer<PdfProvider>(
+            builder: (context, provider, _) {
+              if (provider.isLoading) {
+                return const ShimmerLoading();
+              } else if (provider.totalPdfs.isEmpty) {
+                return Center(
+                  child: ElevatedButton(
                     onPressed: () async {
                       await provider.pickFile();
                     },
                     child: const Text("Pick a PDF"),
-                  );
-                }
-
-                return Expanded(
-                  child: Column(
-                    children: [
-                      if (provider.currentPDF != null)
-                        const PdfControlButtons(),
-                      Expanded(
-                        child: PdfViewer.file(
-                          provider.currentPDF!.filePath,
-                          controller: provider.pdfController!,
-                          passwordProvider: _passwordDialog,
-                          params: PdfViewerParams(
-                            onInteractionStart: (details) {},
-                            // single child scroll
-                            //
-                            margin: 20,
-                            onTextSelectionChange: (selection) {
-                              if (selection != null) {
-                                final text = selection.first.text;
-                                final List<String> words = text.split(" ");
-
-                                debugPrint("selection ${words.length}");
-                              }
-                            },
-                            onViewerReady: (document, controller) {
-                              provider.handlePDF();
-                              controller.setZoom(
-                                  controller.centerPosition, 0.5);
-                              final pdf = provider.currentPDF!.copyWith(
-                                pageNumber: controller.pageNumber!,
-                                lastSeen: DateTime.now(),
-                              );
-                              provider.setCurrentPDF(pdf);
-                              provider.setZoomControl(controller);
-                            },
-                            boundaryMargin: const EdgeInsets.symmetric(
-                              vertical: 5.0,
-                              horizontal: 5.0,
-                            ),
-                            activeMatchTextColor: Colors.red,
-                            enableTextSelection: true,
-                            panEnabled: true,
-                            onPageChanged: (pageNumber) {
-                              final pdf = provider.currentPDF!.copyWith(
-                                pageNumber: pageNumber,
-                              );
-                              provider.setCurrentPDF(pdf);
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 );
-              },
-            ),
-          ],
-        ),
+              } else {
+                return OpenedPdfListView(
+                  pdfLists: provider.totalPdfs.values.toList(),
+                );
+              }
+            },
+          );
+        }),
       ),
-    );
-  }
-
-  Future<String?> _passwordDialog() async {
-    final textController = TextEditingController();
-    return await showDialog<String?>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return PasswordDialogWidget(textController: textController);
-      },
-    );
-  }
-}
-
-class PasswordDialogWidget extends StatelessWidget {
-  const PasswordDialogWidget({
-    super.key,
-    required this.textController,
-  });
-
-  final TextEditingController textController;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Enter password'),
-      content: TextField(
-        controller: textController,
-        autofocus: true,
-        keyboardType: TextInputType.visiblePassword,
-        // obscureText: true,
-        onSubmitted: (value) => Navigator.of(context).pop(value),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(null),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            log("message ${textController.text.trim()}");
-            Navigator.of(context).pop(textController.text.trim());
-          },
-          child: const Text('OK'),
-        ),
-      ],
     );
   }
 }
